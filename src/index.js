@@ -189,7 +189,22 @@ export class SpinShareClient {
      */
     async getChartDownload(chartIdOrReference) {
         const apiUrl = `${this.apiBase}/song/${chartIdOrReference}/download`;
-        return await this.#getOpen(apiUrl, {});
+        const response = await axios.get(apiUrl, {
+            responseType: 'arraybuffer'
+        });
+
+        // Parse the buffer as JSON on error
+        const contentType = response.headers['content-type'];
+        if (contentType && contentType.includes('application/json')) {
+            const textDecoder = new TextDecoder('utf-8');
+            const jsonText = textDecoder.decode(response.data);
+            const jsonResponse = JSON.parse(jsonText);
+            this.#checkResponse(jsonResponse);
+            return jsonResponse;
+        }
+
+        return response.data;
+
     }
 
     /**

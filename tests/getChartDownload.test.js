@@ -8,7 +8,11 @@ describe("getChartDownload", () => {
         const response = await client.getChartDownload(id);
 
         expect(response).toBeDefined();
-        expect(response.startsWith("PK")).toBeTruthy;
+        expect(Buffer.isBuffer(response)).toBe(true);
+
+        // Check ZIP magic number (PK header)
+        expect(response[0]).toBe(0x50); // 'P'
+        expect(response[1]).toBe(0x4B); // 'K'
     });
     it("should return 404 if not found", async () => {
         const client = new SpinShareClient();
