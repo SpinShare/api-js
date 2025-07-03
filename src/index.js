@@ -347,7 +347,7 @@ export class SpinShareClient {
     }
 
     async connectGetNotifications(token) {
-        const apiUrl = `${this.apiBase}/connect/getNotifications`;
+        const apiUrl = `${this.apiBase}/connect/notifications`;
         const response = await this.#getConnect(apiUrl, token, {});
 
         return response.data;
