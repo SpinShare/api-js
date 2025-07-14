@@ -376,10 +376,15 @@ export class SpinShareClient {
     async connectAddReview(token, chartId, recommended, comment) {
         const apiUrl = `${this.apiBase}/connect/reviews/${chartId}/add`;
         const response = await this.#postConnect(apiUrl, token, {
-            useFormData: true,
-            recommended: recommended ? 1 : 0,
+            recommended: !!recommended,
             comment: comment,
         });
+        return response.data;
+    }
+    async connectRemoveReview(token, chartId) {
+        const apiUrl = `${this.apiBase}/connect/reviews/${chartId}/remove`;
+        const response = await this.#getConnect(apiUrl, token, {});
+
         return response.data;
     }
 
