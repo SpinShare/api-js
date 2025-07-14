@@ -11,5 +11,7 @@ export default defineConfig({
         rollupOptions: {
             external: ['axios'],
         },
+        minify: false,
+        sourcemap: true,
     },
 });
