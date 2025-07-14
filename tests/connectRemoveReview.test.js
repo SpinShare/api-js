@@ -1,15 +1,16 @@
+
 import { describe, it, expect, vi } from "vitest";
 import {NotFoundError, SpinShareClient, UnauthenticatedError} from "../src/index.js";
 import axios from "axios";
 
 vi.mock("axios");
 
-describe("connectAddReview", () => {
+describe("connectRemoveReview", () => {
     const correctToken = "CORRECT-TOKEN";
     const wrongToken = "WRONG-TOKEN";
 
-    it("should not throw if review was added", async () => {
-        axios.post.mockResolvedValueOnce({
+    it("should not throw if review was removed", async () => {
+        axios.get.mockResolvedValueOnce({
             data: {
                 version: 1,
                 status: 200,
@@ -18,22 +19,22 @@ describe("connectAddReview", () => {
         });
 
         const client = new SpinShareClient();
-        const response = await client.connectAddReview(correctToken, 1234, true, "Test review");
+        const response = await client.connectRemoveReview(correctToken, 1234);
 
         expect(response).toBeDefined();
-        expect(axios.post).toHaveBeenCalledWith(
-            expect.stringContaining("/connect/reviews/1234/add"),
-            JSON.stringify({
-                recommended: true,
-                comment: "Test review"
-            }),
-            expect.any(Object)
+        expect(axios.get).toHaveBeenCalledWith(
+            expect.stringContaining("/connect/reviews/1234/remove"),
+            expect.objectContaining({
+                params: expect.objectContaining({
+                    connectToken: correctToken
+                })
+            })
         );
         vi.clearAllMocks();
     });
 
     it("should throw 404 if chart does not exist", async () => {
-        axios.post.mockResolvedValueOnce({
+        axios.get.mockResolvedValueOnce({
             data: {
                 version: 1,
                 status: 404,
@@ -42,13 +43,13 @@ describe("connectAddReview", () => {
         });
 
         const client = new SpinShareClient();
-        await expect(client.connectAddReview(correctToken, 1234, true, "Test review"))
+        await expect(client.connectRemoveReview(correctToken, 1234))
             .rejects.toThrowError(NotFoundError);
         vi.clearAllMocks();
     });
 
     it("should throw 403 if token is invalid", async () => {
-        axios.post.mockResolvedValueOnce({
+        axios.get.mockResolvedValueOnce({
             data: {
                 version: 1,
                 status: 403,
@@ -57,7 +58,7 @@ describe("connectAddReview", () => {
         });
 
         const client = new SpinShareClient();
-        await expect(client.connectAddReview(wrongToken, 1234, true, "Test review"))
+        await expect(client.connectRemoveReview(wrongToken, 1234))
             .rejects.toThrowError(UnauthenticatedError);
         vi.clearAllMocks();
     });
