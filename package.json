@@ -1,22 +1,26 @@
 {
   "name": "@spinshare/api-js",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "type": "module",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "files": [
-    "dist/index.cjs.js",
-    "dist/index.es.js"
+    "dist"
   ],
   "scripts": {
     "test": "vitest --disable-console-intercept ",
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@vitest/ui": "^3.0.8",
-    "vite": "^6.2.0",
+    "typescript": "^7.0.2",
     "vitest": "^3.0.8"
   },
   "dependencies": {

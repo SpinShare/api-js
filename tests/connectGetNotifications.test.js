@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import {NOTIFICATION_TYPE_SYSTEM, SpinShareClient, UnauthenticatedError} from "../src/index.js";
+import {NOTIFICATION_TYPE_SYSTEM, SpinShareClient, UnauthenticatedError} from "../src/index.ts";
 import axios from "axios";
 
 vi.mock("axios");

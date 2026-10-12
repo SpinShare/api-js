@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import {NotFoundError, SpinShareClient, UnauthenticatedError, ValidationError} from "../src/index.js";
+import {NotFoundError, SpinShareClient, UnauthenticatedError, ValidationError} from "../src/index.ts";
 import axios from "axios";
 
 vi.mock("axios");
@@ -20,14 +20,14 @@ describe("connectAddReview", () => {
         const client = new SpinShareClient();
         const response = await client.connectAddReview(correctToken, 1234, true, "Test review");
 
-        expect(response).toBeDefined();
+        expect(response).toEqual([]);
         expect(axios.post).toHaveBeenCalledWith(
             expect.stringContaining("/connect/reviews/1234/add"),
-            JSON.stringify({
+            {
                 recommended: true,
                 comment: "Test review"
-            }),
-            expect.any(Object)
+            },
+            expect.objectContaining({ params: { connectToken: correctToken } })
         );
         vi.clearAllMocks();
     });

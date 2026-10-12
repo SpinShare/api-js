@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {NotFoundError, SpinShareClient} from "../src/index.js";
+import {NotFoundError, SpinShareClient} from "../src/index.ts";
 
 describe("getActivePromos", () => {
     it("should return an array of promos", async () => {

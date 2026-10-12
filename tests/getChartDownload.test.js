@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {SpinShareClient} from "../src/index.js";
+import {SpinShareClient} from "../src/index.ts";
 
 describe("getChartDownload", () => {
     it("should return a zip by id", async () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {NotFoundError, SpinShareClient} from "../src/index.js";
+import {NotFoundError, SpinShareClient} from "../src/index.ts";
 
 describe("getChartPlaylists", () => {
     it("should return playlists by id", async () => {

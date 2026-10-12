@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {NotFoundError, SpinShareClient} from "../src/index.js";
+import {NotFoundError, SpinShareClient} from "../src/index.ts";
 
 describe("getUserReviews", () => {
     it("should return reviews by id", async () => {

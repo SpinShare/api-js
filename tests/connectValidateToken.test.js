@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import {SpinShareClient} from "../src/index.js";
+import {SpinShareClient} from "../src/index.ts";
 import axios from "axios";
 
 vi.mock("axios");
@@ -33,6 +33,14 @@ describe("connectGetToken", () => {
         const isValid = await client.connectValidateToken(wrongToken);
 
         expect(isValid).toBeFalsy();
+        vi.clearAllMocks();
+    });
+
+    it("should rethrow errors unrelated to the token", async () => {
+        axios.get.mockRejectedValueOnce(new Error("Network Error"));
+
+        const client = new SpinShareClient();
+        await expect(client.connectValidateToken(correctToken)).rejects.toThrowError("Network Error");
         vi.clearAllMocks();
     });
 });

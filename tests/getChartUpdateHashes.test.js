@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {SpinShareClient, ValidationError} from "../src/index.js";
+import {SpinShareClient, ValidationError} from "../src/index.ts";
 
 describe("getChartUpdateHashes", () => {
     it("should return update hashes by id and reference", async () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import {NotFoundError, SpinShareClient} from "../src/index.js";
+import {NotFoundError, SpinShareClient, ValidationError} from "../src/index.ts";
 import axios from "axios";
 
 vi.mock("axios");
@@ -17,8 +17,8 @@ describe("connectGetToken", () => {
             data: correctToken,
         } });
 
-        const client = new SpinShareClient();
-        const token = await client.connectGetToken(correctApiKey, correctCode);
+        const client = new SpinShareClient({ connectApiKey: correctApiKey });
+        const token = await client.connectGetToken(correctCode);
 
         expect(token).toBe(correctToken);
         vi.clearAllMocks();
@@ -30,8 +30,8 @@ describe("connectGetToken", () => {
             data: [],
         }});
 
-        const client = new SpinShareClient();
-        await expect(client.connectGetToken("WRONG-API-KEY", wrongCode)).rejects.toThrowError(NotFoundError);
+        const client = new SpinShareClient({ connectApiKey: "WRONG-API-KEY" });
+        await expect(client.connectGetToken(wrongCode)).rejects.toThrowError(NotFoundError);
 
         vi.clearAllMocks();
     });
@@ -42,9 +42,14 @@ describe("connectGetToken", () => {
             data: [],
         } });
 
-        const client = new SpinShareClient();
-        await expect(client.connectGetToken(correctApiKey, wrongCode)).rejects.toThrowError(NotFoundError);
+        const client = new SpinShareClient({ connectApiKey: correctApiKey });
+        await expect(client.connectGetToken(wrongCode)).rejects.toThrowError(NotFoundError);
 
         vi.clearAllMocks();
+    });
+    it("should throw without a connectApiKey option", async () => {
+        const client = new SpinShareClient();
+        await expect(client.connectGetToken(correctCode)).rejects.toThrowError(ValidationError);
+        expect(axios.get).not.toHaveBeenCalled();
     });
 });

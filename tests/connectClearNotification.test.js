@@ -3,7 +3,7 @@ import {
     NotFoundError,
     SpinShareClient,
     UnauthenticatedError
-} from "../src/index.js";
+} from "../src/index.ts";
 import axios from "axios";
 
 vi.mock("axios");

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import {ServerError, SpinShareClient} from "../src/index.js";
+import {ServerError, SpinShareClient} from "../src/index.ts";
 import axios from "axios";
 
 vi.mock("axios");

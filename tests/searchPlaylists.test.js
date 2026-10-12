@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {SpinShareClient} from "../src/index.js";
+import {SpinShareClient} from "../src/index.ts";
 
 describe("searchPlaylists", () => {
     it("should return an array of playlists", async () => {
