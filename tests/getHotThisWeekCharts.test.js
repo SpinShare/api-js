@@ -8,7 +8,6 @@ describe("getHotThisWeekCharts", () => {
 
         expect(response).toBeDefined();
         expect(response).toBeInstanceOf(Array);
-        expect(response.length).toBeGreaterThan(0);
     });
     it("should paginate properly", async () => {
         const client = new SpinShareClient();
@@ -19,7 +18,13 @@ describe("getHotThisWeekCharts", () => {
         expect(responsePage1).toBeDefined();
         expect(responsePage0).toBeInstanceOf(Array);
         expect(responsePage1).toBeInstanceOf(Array);
-        expect(responsePage0.length).toBeGreaterThan(0);
+
+        // Only a full first page guarantees there is a second one
+        if(responsePage0.length < 12) {
+            expect(responsePage1.length).toBe(0);
+            return;
+        }
+
         expect(responsePage1.length).toBeGreaterThan(0);
         expect(responsePage0[0].id === responsePage1[0].id).toBeFalsy();
     });

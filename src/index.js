@@ -2,6 +2,15 @@ import axios from "axios";
 
 export class SpinShareClient {
     apiBase = "https://spinsha.re/api";
+    dlcHash = null;
+
+    /**
+     * @param {object} [options] - Options
+     * @param {string} [options.dlcHash] - DLC hash sent as SPSH-DLC-Hash when downloading DLC charts.
+     */
+    constructor({ dlcHash = null } = {}) {
+        this.dlcHash = dlcHash;
+    }
 
     /**
      * @param {string} newApiBase
@@ -112,12 +121,33 @@ export class SpinShareClient {
     }
 
     /**
-     * Get's the latest version of the SpinShare Client for a set platform.
-     * @param {string} platform
-     * @returns {Promise<Object>}
+     * Checks whether the API is reachable.
+     * @returns {Promise<boolean>}
      */
-    async getClientLatestVersion(platform) {
-        const apiUrl = `${this.apiBase}/latestVersion/${platform}`;
+    async ping() {
+        const apiUrl = `${this.apiBase}/ping`;
+        const response = await this.#getOpen(apiUrl, {});
+
+        return response.pong;
+    }
+
+    /**
+     * Returns the 2 newest visible promos.
+     * @returns {Promise<Array>}
+     */
+    async getPromos() {
+        const apiUrl = `${this.apiBase}/promos`;
+        const response = await this.#getOpen(apiUrl, {});
+
+        return response.data;
+    }
+
+    /**
+     * Returns the status of the SpinShare Twitch stream.
+     * @returns {Promise<{title: string, viewers: number, isLive: boolean}>}
+     */
+    async getStreamStatus() {
+        const apiUrl = `${this.apiBase}/streamStatus`;
         const response = await this.#getOpen(apiUrl, {});
 
         return response.data;
@@ -190,7 +220,8 @@ export class SpinShareClient {
     async getChartDownload(chartIdOrReference) {
         const apiUrl = `${this.apiBase}/song/${chartIdOrReference}/download`;
         const response = await axios.get(apiUrl, {
-            responseType: 'arraybuffer'
+            responseType: 'arraybuffer',
+            headers: this.dlcHash ? { 'SPSH-DLC-Hash': this.dlcHash } : {},
         });
 
         // Parse the buffer as JSON on error
@@ -480,12 +511,18 @@ export class SpinShareClient {
             `Not Found`
         )
         if(response.status === 403) throw new UnauthenticatedError(
-            `This API requires a connect token and an api key and it was not provided or invalid`
+            `Access denied: missing or invalid connect token, API key or DLC hash`
         )
-        if(response.status !== 200 && response.status !== undefined) throw new ApiStatusError(
+        if(response.status === 400 || response.status === 422) throw new ValidationError(
+            `Invalid request or missing parameter`
+        )
+        if(response.status === 500) throw new ServerError(
+            `Internal server error`
+        )
+        if(response.status !== 200 && response.status !== 201 && response.status !== undefined) throw new ApiStatusError(
             `Unexpected status code: ${response.status}, expected 200`
         )
-        if(response.status === 200) {
+        if(response.status === 200 || response.status === 201) {
             if (response.version !== 1) throw new ApiMismatchError(
                 `Unsupported Version: ${response.version}`
             )
@@ -498,6 +535,7 @@ export class NotFoundError extends Error {}
 export class UnauthenticatedError extends Error {}
 export class ApiStatusError extends Error {}
 export class ServerError extends Error {}
+export class ValidationError extends Error {}
 
 export const NOTIFICATION_TYPE_SYSTEM = 0;
 export const NOTIFICATION_TYPE_NEWREVIEW = 1;

@@ -22,6 +22,12 @@ const client = new SpinShareClient();
 })();
 ```
 
+#### DLC charts
+Pass a DLC hash to the constructor to send it as `SPSH-DLC-Hash` for downloading DLC charts:
+```js
+const client = new SpinShareClient({ dlcHash: "your-dlc-hash" });
+```
+
 #### Connect APIs example
 ```js
 import SpinShareClient from "@spinshare/api-js";

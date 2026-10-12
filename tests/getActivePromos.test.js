@@ -1,10 +1,18 @@
 import { describe, it, expect } from "vitest";
-import {SpinShareClient} from "../src/index.js";
+import {NotFoundError, SpinShareClient} from "../src/index.js";
 
 describe("getActivePromos", () => {
     it("should return an array of promos", async () => {
         const client = new SpinShareClient();
-        const response = await client.getActivePromos();
+
+        let response;
+        try {
+            response = await client.getActivePromos();
+        } catch(e) {
+            // The server responds with 404 if there are no visible promos
+            expect(e).toBeInstanceOf(NotFoundError);
+            return;
+        }
 
         expect(response).toBeDefined();
         expect(response).toBeInstanceOf(Array);

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import {NotFoundError, SpinShareClient, UnauthenticatedError} from "../src/index.js";
+import {NotFoundError, SpinShareClient, UnauthenticatedError, ValidationError} from "../src/index.js";
 import axios from "axios";
 
 vi.mock("axios");
@@ -29,6 +29,37 @@ describe("connectAddReview", () => {
             }),
             expect.any(Object)
         );
+        vi.clearAllMocks();
+    });
+
+    it("should not throw if a new review was created", async () => {
+        axios.post.mockResolvedValueOnce({
+            data: {
+                version: 1,
+                status: 201,
+                data: []
+            }
+        });
+
+        const client = new SpinShareClient();
+        const response = await client.connectAddReview(correctToken, 1234, true, "Test review");
+
+        expect(response).toBeDefined();
+        vi.clearAllMocks();
+    });
+
+    it("should throw 422 if a parameter is missing", async () => {
+        axios.post.mockResolvedValueOnce({
+            data: {
+                version: 1,
+                status: 422,
+                data: []
+            }
+        });
+
+        const client = new SpinShareClient();
+        await expect(client.connectAddReview("", 1234, true, "Test review"))
+            .rejects.toThrowError(ValidationError);
         vi.clearAllMocks();
     });
 
