@@ -208,6 +208,34 @@ export class SpinShareClient {
     }
 
     /**
+     * Returns the current update hashes of multiple charts at once. Charts that can't be found are omitted.
+     * @param {Array<number|string>} chartIdsOrReferences - Up to 500 chart IDs and/or file references.
+     * @returns {Promise<Array<{id: number, fileReference: string, updateHash: string}>>}
+     */
+    async getChartUpdateHashes(chartIdsOrReferences) {
+        const apiUrl = `${this.apiBase}/updateHashes`;
+        const response = await this.#postOpen(apiUrl, {
+            charts: chartIdsOrReferences,
+        });
+
+        return response.data;
+    }
+
+    /**
+     * Checks whether the given update hashes match the current versions of multiple charts.
+     * @param {Array<{chart: number|string, updateHash: string}>} charts - Up to 500 chart/updateHash pairs.
+     * @returns {Promise<Array<{chart: number|string, isUpToDate: boolean}>>}
+     */
+    async checkChartUpdateHashes(charts) {
+        const apiUrl = `${this.apiBase}/updateHashes/check`;
+        const response = await this.#postOpen(apiUrl, {
+            charts,
+        });
+
+        return response.data;
+    }
+
+    /**
      * Returns more detailled information about a playlist.
      * @param playlistId
      * @returns {Promise<*>}
