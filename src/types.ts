@@ -79,11 +79,13 @@ export interface Chart {
     hasHardDifficulty: boolean;
     hasExpertDifficulty: boolean;
     hasXDDifficulty: boolean;
+    hasRemiXDDifficulty: boolean;
     easyDifficulty: number | null;
     normalDifficulty: number | null;
     hardDifficulty: number | null;
     expertDifficulty: number | null;
     XDDifficulty: number | null;
+    remiXDDifficulty: number | null;
     uploadDate: PhpDateTime;
     updateDate: PhpDateTime | null;
     updateHash: string | null;
@@ -129,11 +131,13 @@ export interface DiscoveryChart {
     hasHardDifficulty: boolean;
     hasExpertDifficulty: boolean;
     hasXDDifficulty: boolean;
+    hasRemiXDDifficulty: boolean;
     easyDifficulty: number | null;
     normalDifficulty: number | null;
     hardDifficulty: number | null;
     expertDifficulty: number | null;
     XDDifficulty: number | null;
+    remiXDDifficulty: number | null;
     updateDate: PhpDateTime | null;
     updateHash: string | null;
     cover: string;
@@ -255,6 +259,8 @@ export interface SearchChartsOptions {
     diffExpert?: boolean;
     /** Whether to include charts with the "XD" difficulty. Defaults to true. */
     diffXD?: boolean;
+    /** Whether to include charts with the "RemiXD" difficulty. Defaults to true. */
+    diffRemiXD?: boolean;
     /** The minimum rating value to filter the charts. Defaults to 0. */
     diffRatingFrom?: number;
     /** The maximum rating value to filter the charts. Defaults to 99; 0 is treated as 99. */
